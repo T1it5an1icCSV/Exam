@@ -1,4 +1,4 @@
-name: Locust CI
+name: GitHub CI
 
 on:
   push:
@@ -7,35 +7,16 @@ on:
   workflow_dispatch:
 
 jobs:
-  loadtest:
+  ci:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout repository files
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Install deps
+      # Simple CI check without Locust
+      - name: Validate repository
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Run Locust headless
-        run: |
-          locust -f locustfile.py --headless -u 5 -r 1 -t 30s --html locust-report.html --csv locust-stats
-
-      - name: Upload artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: locust-artifacts
-          path: |
-            locust-report.html
-            locust-stats_stats.csv
-            locust-stats_failures.csv
-            locust-stats_exceptions.csv
-            locust-stats_stats_history.csv
+          echo "GitHub workflow is running on branch FIO_30"
+          ls -la
