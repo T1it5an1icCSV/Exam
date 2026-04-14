@@ -1,0 +1,4 @@
+locust-report.html
+locust-stats_*.csv
+__pycache__/
+.cache/
