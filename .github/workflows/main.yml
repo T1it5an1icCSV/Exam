@@ -1,0 +1,40 @@
+name: Locust CI
+
+on:
+  push:
+    branches:
+      - FIO_30   # важно: буква O, не ноль
+
+jobs:
+  loadtest:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: pip install -r requirements.txt
+
+      - name: Run Locust headless
+        run: |
+          locust -f locustfile.py --headless \
+            -u 5 -r 1 -t 30s \
+            --html locust-report.html \
+            --csv locust-stats
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: locust-report
+          path: |
+            locust-report.html
+            locust-stats_stats.csv
+            locust-stats_failures.csv
+            locust-stats_exceptions.csv
+            locust-stats_stats_history.csv
